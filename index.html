@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Fetch</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="chart.js"></script>
+</head>
+
+<body>
+	<canvas id="myChart" width="400" height="185"></canvas>
+	<script>
+		const xlables = [];
+		const ydata = [];
+
+		getData().catch(error => {
+				console.log('Error!');
+				console.error(error);
+			});
+
+		getChart();
+
+
+		function getChart()
+		{
+			const ctx = document.getElementById('myChart').getContext('2d');
+			const myChart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: xlables,
+					datasets: [{
+						label: 'Global Temperature changes data from NASA',
+						fill: false,
+						data: ydata,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgba(255, 99, 132, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								callback: function (value, index, values) {
+									return value + '°';
+								}
+							}
+						}]
+					}
+				}
+			});
+		}
+
+		async function getData() {
+			const response = await fetch('data.csv');
+			const data = await response.text();
+
+			const rows = data.split('\n').slice(1);
+			rows.forEach(elm => {
+				const row = elm.split(',');
+				const year = row[0];
+				xlables.push(year);
+				const temp = row[1];
+				ydata.push(parseFloat(temp) + 14);
+				console.log(year, temp);
+			});
+		}
+
+			
+	</script>
+</body>
+
+</html>
