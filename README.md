@@ -1,4 +1,4 @@
-# Global-temperature
+# Data Visualization
 Global Temperature representation using Chart.js with NASA dataset in CSV format
 
 # DEMO
